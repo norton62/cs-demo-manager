@@ -14,5 +14,4 @@ export const commands = {
   [HelpCommand.Name]: HelpCommand,
   [JsonCommand.Name]: JsonCommand,
   [XlsxCommand.Name]: XlsxCommand,
-  [HighlightsCommand.Name]: HighlightsCommand,
 };

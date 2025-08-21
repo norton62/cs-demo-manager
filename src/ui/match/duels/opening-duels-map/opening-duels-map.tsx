@@ -25,10 +25,11 @@ function getRowId(kill: Kill): string {
 
 type Props = {
   map: Map;
+  radarFileSrc: string;
   kills: Kill[];
 };
 
-export function OpeningDuelsMap({ map, kills }: Props) {
+export function OpeningDuelsMap({ map, kills, radarFileSrc }: Props) {
   const match = useCurrentMatch();
   const { watchDemo, isKillCsRequired } = useCounterStrike();
   const { showDialog } = useDialog();
@@ -112,7 +113,7 @@ export function OpeningDuelsMap({ map, kills }: Props) {
 
   const { canvasRef, interactiveCanvas } = useMapCanvas({
     map,
-    game: match.game,
+    radarFileSrc,
     draw: (interactiveCanvas, context) => {
       const { zoomedToRadarX, zoomedToRadarY, zoomedSize, getMouseX, getMouseY } = interactiveCanvas;
 
@@ -122,8 +123,8 @@ export function OpeningDuelsMap({ map, kills }: Props) {
 
       for (const kill of filteredKills) {
         // Draw killer
-        const scaledX = zoomedToRadarX(kill.killerX, kill.killerZ);
-        const scaledY = zoomedToRadarY(kill.killerY, kill.killerZ);
+        const scaledX = zoomedToRadarX(kill.killerX);
+        const scaledY = zoomedToRadarY(kill.killerY);
         const playerRadius = zoomedSize(8);
         context.beginPath();
         context.arc(scaledX, scaledY, playerRadius, 0, 2 * Math.PI);
@@ -138,8 +139,8 @@ export function OpeningDuelsMap({ map, kills }: Props) {
         }
 
         // Draw line to victim
-        const scaledVictimX = zoomedToRadarX(kill.victimX, kill.victimZ);
-        const scaledVictimY = zoomedToRadarY(kill.victimY, kill.victimZ);
+        const scaledVictimX = zoomedToRadarX(kill.victimX);
+        const scaledVictimY = zoomedToRadarY(kill.victimY);
         context.beginPath();
         context.moveTo(scaledX, scaledY);
         context.lineTo(scaledVictimX, scaledVictimY);
@@ -152,15 +153,14 @@ export function OpeningDuelsMap({ map, kills }: Props) {
         }
 
         // Draw victim
-        const paths = drawPlayerDeath({
+        const paths = drawPlayerDeath(
           context,
           interactiveCanvas,
-          x: kill.victimX,
-          y: kill.victimY,
-          z: kill.victimZ,
-          side: kill.victimSide,
-          color: selectedKill?.id === kill.id ? 'red' : undefined,
-        });
+          kill.victimX,
+          kill.victimY,
+          kill.victimSide,
+          selectedKill?.id === kill.id ? 'red' : undefined,
+        );
         if (!hoveringKill) {
           const isHoveringKill = paths.some((path) => {
             return context.isPointInStroke(path, mouseX, mouseY);

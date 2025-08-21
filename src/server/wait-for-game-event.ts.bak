@@ -1,0 +1,27 @@
+import { server } from './server'; // The server instance is likely exported from here
+
+/**
+ * Listens for a specific event from the game via the WebSocket server.
+ * Returns a promise that resolves when the event is received.
+ */
+export function waitForGameEvent(eventName: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const onEventReceived = () => {
+      // When the event comes in, remove this listener and resolve the promise.
+      server.off(eventName, onEventReceived);
+      resolve();
+    };
+
+    // Register the listener on the WebSocket server instance.
+    server.on(eventName, onEventReceived);
+
+    // Add a timeout to prevent the script from waiting forever if the event never comes.
+    const timeout = setTimeout(() => {
+      server.off(eventName, onEventReceived);
+      reject(new Error(`Timed out after 5 minutes of waiting for game event: ${eventName}`));
+    }, 5 * 60 * 1000); // 5-minute timeout
+
+    // Ensure the timeout is cleared if the event is received.
+    server.on(eventName, () => clearTimeout(timeout));
+  });
+}

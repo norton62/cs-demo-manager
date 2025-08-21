@@ -12,8 +12,8 @@ import { Message } from 'csdm/ui/components/message';
 import { useCurrentMatchMap } from 'csdm/ui/match/use-current-match-map';
 import { useWebSocketClient } from 'csdm/ui/hooks/use-web-socket-client';
 import { useGetMapRadarSrc } from 'csdm/ui/maps/use-get-map-radar-src';
+import { useSelectedRadarLevel } from './use-selected-radar-level';
 import { useCurrentMatch } from '../../use-current-match';
-import { RadarLevel } from 'csdm/ui/maps/radar-level';
 
 type State = {
   status: Status;
@@ -29,6 +29,7 @@ export function GrenadesFinderLoader() {
     grenadesThrow: [],
   });
   const checksum = useCurrentMatchChecksum();
+  const selectedRadarLevel = useSelectedRadarLevel();
   const getMapRadarFileSrc = useGetMapRadarSrc();
 
   useEffect(() => {
@@ -71,7 +72,7 @@ export function GrenadesFinderLoader() {
     return <Message message={<Trans>An error occurred.</Trans>} />;
   }
 
-  const radarFileSrc = getMapRadarFileSrc(map?.name, match.game, RadarLevel.Upper);
+  const radarFileSrc = getMapRadarFileSrc(map?.name, match.game, selectedRadarLevel);
   if (map === undefined || radarFileSrc === undefined) {
     return <UnsupportedMap />;
   }
@@ -82,7 +83,7 @@ export function GrenadesFinderLoader() {
 
   return (
     <Content>
-      <GrenadesFinder map={map} grenadesThrow={grenadesThrow} />
+      <GrenadesFinder map={map} grenadesThrow={grenadesThrow} radarFileSrc={radarFileSrc} />
     </Content>
   );
 }

@@ -12,14 +12,7 @@ export function useDrawDeaths() {
     });
 
     for (const kill of killsToDraw) {
-      drawPlayerDeath({
-        context,
-        interactiveCanvas,
-        x: kill.victimX,
-        y: kill.victimY,
-        z: kill.victimZ,
-        side: kill.victimSide,
-      });
+      drawPlayerDeath(context, interactiveCanvas, kill.victimX, kill.victimY, kill.victimSide);
     }
   };
 

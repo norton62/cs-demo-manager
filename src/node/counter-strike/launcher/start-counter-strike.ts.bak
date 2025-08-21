@@ -1,4 +1,4 @@
-import { exec } from 'node:child_process';
+import { exec, ChildProcess } from 'node:child_process';
 import fs from 'fs-extra';
 import { Game } from 'csdm/common/types/counter-strike';
 import { isWindows } from 'csdm/node/os/is-windows';
@@ -22,6 +22,7 @@ import { getSteamFolderPath } from '../get-steam-folder-path';
 import { glob } from 'csdm/node/filesystem/glob';
 import { CounterStrikeExecutableNotFound } from './errors/counter-strike-executable-not-found';
 import { isLinux } from 'csdm/node/os/is-linux';
+import { waitForGameEvent } from 'csdm/server/wait-for-game-event';
 
 type StartCounterStrikeOptions = {
   demoPath: string;

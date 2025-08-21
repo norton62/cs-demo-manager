@@ -362,7 +362,7 @@ if (IS_DEV) {
       callback.apply(this, args);
     };
 
-    const timeoutId = originalSetTimeout(wrappedCallback, ms ?? 0);
+    const timeoutId = originalSetTimeout.call(window, wrappedCallback, ms ?? 0);
     const timeout: NodeJS.Timeout = {
       hasRef: () => true,
       ref: () => timeout,

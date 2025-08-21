@@ -5,6 +5,7 @@ import type { GrenadeThrow } from 'csdm/common/types/grenade-throw';
 import { useFilteredGrenadesThrow } from './use-filtered-grenades-throw';
 import { FinderRoundsSelect } from './rounds-select';
 import { FinderPlayerSelect } from './players-select';
+import { FinderRadarLevelSelect } from './radar-level-select';
 import { useBuildGrenadeDrawings } from './drawing/build-grenade-drawings';
 import { drawGrenadeDrawings } from './drawing/draw-grenade-drawings';
 import { GrenadesFinderContextMenu } from './context-menu';
@@ -27,9 +28,10 @@ function getRowId(grenadeThrow: GrenadeThrow): string {
 type Props = {
   map: Map;
   grenadesThrow: GrenadeThrow[];
+  radarFileSrc: string;
 };
 
-export function GrenadesFinder({ map, grenadesThrow }: Props) {
+export function GrenadesFinder({ map, grenadesThrow, radarFileSrc }: Props) {
   const match = useCurrentMatch();
   const { watchDemo, isKillCsRequired } = useCounterStrike();
   const { showDialog } = useDialog();
@@ -39,7 +41,7 @@ export function GrenadesFinder({ map, grenadesThrow }: Props) {
   const buildGrenadeDrawings = useBuildGrenadeDrawings();
   const { canvasRef, interactiveCanvas } = useMapCanvas({
     map,
-    game: match.game,
+    radarFileSrc,
     draw: async (interactiveCanvas, context) => {
       const drawings = await buildGrenadeDrawings(filteredGrenadesThrow, selectedGrenadeThrow?.id, interactiveCanvas);
       drawGrenadeDrawings(drawings, context, interactiveCanvas, hoveredIdRef);
@@ -113,6 +115,7 @@ export function GrenadesFinder({ map, grenadesThrow }: Props) {
         <FinderRoundsSelect />
         <FinderPlayerSelect />
         <FinderSideSelect />
+        <FinderRadarLevelSelect />
         <Table<GrenadeThrow> table={table} />
       </div>
       <div className="flex flex-1 relative bg-gray-50" ref={setWrapper}>
