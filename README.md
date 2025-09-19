@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> EVERYTHING is currently broken cuz valve
+
 # CS Demo Manager - CLI Highlights Enhancement
 
 This is a fork of the powerful CS Demo Manager desktop application, enhanced with a new, highly customizable command-line interface (CLI) tool for automatically generating player-specific highlights from Counter-Strike 2 demos.
